@@ -1058,7 +1058,9 @@ export default class Calendar {
     eventManager.on('release', (eventsPayload) => {
       this.trigger('eventsReset', eventsPayload)
     })
-
+    eventManager.on('release-partial', (eventsPayload) => {
+      this.trigger('eventsReset', eventsPayload);
+    });
     eventManager.freeze()
 
     rawSources.forEach((rawSource) => {

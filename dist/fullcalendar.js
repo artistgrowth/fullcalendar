@@ -3806,8 +3806,13 @@ var View = /** @class */ (function (_super) {
         if (_this['initialize']) {
             _this['initialize']();
         }
+        _this.bindEventChanges();
         return _this;
     }
+    View.prototype.removeElement = function () {
+        this.unbindEventChanges();
+        _super.prototype.removeElement.call(this);
+    };
     View.prototype._getView = function () {
         return this;
     };
@@ -4459,9 +4464,7 @@ View.watch('initialEvents', ['dateProfile'], function (deps) {
 });
 View.watch('bindingEvents', ['initialEvents'], function (deps) {
     this.setEvents(deps.initialEvents);
-    this.bindEventChanges();
 }, function () {
-    this.unbindEventChanges();
     this.unsetEvents();
 });
 View.watch('displayingEvents', ['displayingDates', 'hasEvents'], function () {
@@ -8712,6 +8715,7 @@ var EventPeriod = /** @class */ (function () {
                 _this.addEventDefs(eventDefs);
                 _this.pendingCnt--;
                 _this.tryRelease();
+                _this.trigger('release-partial', _this.eventInstanceGroupsById);
             }
         }, function () {
             if (request.status !== 'cancelled') {
@@ -9050,6 +9054,9 @@ var EventManager = /** @class */ (function () {
     EventManager.prototype.bindPeriod = function (eventPeriod) {
         this.listenTo(eventPeriod, 'release', function (eventsPayload) {
             this.trigger('release', eventsPayload);
+        });
+        this.listenTo(eventPeriod, 'release-partial', function (eventsPayload) {
+            this.trigger('release-partial', eventsPayload);
         });
     };
     EventManager.prototype.unbindPeriod = function (eventPeriod) {
@@ -11341,6 +11348,9 @@ var Calendar = /** @class */ (function () {
             rawSources.unshift(singleRawSource);
         }
         eventManager.on('release', function (eventsPayload) {
+            _this.trigger('eventsReset', eventsPayload);
+        });
+        eventManager.on('release-partial', function (eventsPayload) {
             _this.trigger('eventsReset', eventsPayload);
         });
         eventManager.freeze();

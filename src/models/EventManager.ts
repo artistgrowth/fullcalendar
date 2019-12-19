@@ -207,7 +207,10 @@ export default class EventManager {
   bindPeriod(eventPeriod) {
     this.listenTo(eventPeriod, 'release', function(eventsPayload) {
       this.trigger('release', eventsPayload)
-    })
+    });
+    this.listenTo(eventPeriod, 'release-partial', function(eventsPayload) {
+      this.trigger('release-partial', eventsPayload);
+    });
   }
 
 

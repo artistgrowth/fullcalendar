@@ -1289,6 +1289,7 @@ declare module 'fullcalendar/View' {
 	    intervalStart: moment.Moment;
 	    intervalEnd: moment.Moment;
 	    constructor(calendar: any, viewSpec: any);
+	    removeElement(): void;
 	    _getView(): this;
 	    opt(name: any): any;
 	    initRenderQueue(): void;

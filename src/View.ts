@@ -78,6 +78,13 @@ export default abstract class View extends InteractiveDateComponent {
     if (this['initialize']) {
       this['initialize']()
     }
+
+    this.bindEventChanges();
+  }
+
+  removeElement() {
+    this.unbindEventChanges();
+    super.removeElement();
   }
 
 
@@ -1004,9 +1011,7 @@ View.watch('initialEvents', [ 'dateProfile' ], function(deps) {
 
 View.watch('bindingEvents', [ 'initialEvents' ], function(deps) {
   this.setEvents(deps.initialEvents)
-  this.bindEventChanges()
 }, function() {
-  this.unbindEventChanges()
   this.unsetEvents()
 })
 

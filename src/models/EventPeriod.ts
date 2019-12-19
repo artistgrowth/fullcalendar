@@ -85,7 +85,8 @@ export default class EventPeriod {
 
         this.addEventDefs(eventDefs)
         this.pendingCnt--
-        this.tryRelease()
+        this.tryRelease();
+        this.trigger('release-partial', this.eventInstanceGroupsById);
       }
     }, () => { // failure
       if (request.status !== 'cancelled') {
